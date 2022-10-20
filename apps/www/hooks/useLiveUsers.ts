@@ -13,19 +13,22 @@ app.auth({
 const db = app.database()
 
 const changeLiveStatus = (userId: string, status: boolean) => {
+  if (!userId) return
+  console.log(userId)
   return db.collection('user-live').doc(userId).set({
-    whiteboardLive: true,
+    whiteboardLive: status,
   })
 }
 
 export const useCurrentUserId = () => {
   const router = useRouter()
-  const { u } = router.query as { u: string | undefined }
-  return u
+  const { u, r } = router.query as { u: string | undefined; r: string | undefined }
+  return { u, r }
 }
 
 export const useCheckInOut = (userId: string) => {
   useEffect(() => {
+    if (!userId) return
     if (userId) changeLiveStatus(userId, true)
     return () => {
       if (userId) changeLiveStatus(userId, false)
