@@ -3,13 +3,15 @@ import { useCallback, useEffect } from 'react'
 import { useState } from 'react'
 import { useRef } from 'react'
 import { useCurrentUserId } from '~hooks/useLiveUsers'
-import { getUserMedia } from './peerjs.service'
+import { getUserMedia, streamToEnhancedImage } from './peerjs.service'
 
 interface Props {
   remoteId: string
 }
 const VideoCall = (props: Props) => {
   const { u: localId } = useCurrentUserId()
+  const [withEnhancement, setWithEnhancement] = useState(false)
+  const [base64, setBase64] = useState<string>('')
 
   const [peer, setPeer] = useState<Peer>()
   useEffect(() => {
@@ -71,6 +73,15 @@ const VideoCall = (props: Props) => {
     const localStream = await getUserMedia()
     localRef.current.srcObject = localStream
 
+    if (withEnhancement) {
+      setInterval(async () => {
+        const capture = new ImageCapture(localStream.getVideoTracks()[0])
+        const res = await streamToEnhancedImage(capture)
+        setBase64(res.Image)
+        console.log(res.Image.length)
+      }, 7000)
+    }
+
     const call = peer.call(props.remoteId, localStream)
     setCall(call)
     if (!call) {
@@ -83,7 +94,7 @@ const VideoCall = (props: Props) => {
       console.log('call closed @caller')
       call
     })
-  }, [peer, props.remoteId])
+  }, [peer, props.remoteId, withEnhancement])
 
   const endCall = useCallback(() => {
     localRef.current.srcObject = null
@@ -96,6 +107,9 @@ const VideoCall = (props: Props) => {
     <div className="flex flex-col space-y-4">
       <video className="w-44" ref={localRef} src="" autoPlay muted></video>
       <video className="w-44" ref={remoteRef} src="" autoPlay muted></video>
+      {base64 && (
+        <img className="absolute top-40 right-10" src={`data:image/png;base64,${base64}`}></img>
+      )}
       <div className="space-x-10">
         <button className="border px-4 py-1" onClick={callUser}>
           拨打
@@ -104,6 +118,15 @@ const VideoCall = (props: Props) => {
           挂断
         </button>
       </div>
+      <label htmlFor="">
+        <input
+          type="checkbox"
+          checked={withEnhancement}
+          onChange={(e) => setWithEnhancement(e.target.checked)}
+        />
+        开启自动图片增强
+      </label>
+      {withEnhancement && <span className="text-red-500">（开启后，每7秒自动截图）</span>}
     </div>
   )
 }

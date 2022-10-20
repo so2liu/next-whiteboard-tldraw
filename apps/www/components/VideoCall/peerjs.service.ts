@@ -146,24 +146,28 @@ export const getCapture = async (track: MediaStreamTrack): Promise<string | unde
   return dataURL
 }
 
-// const capture = new ImageCapture(userVideoStream.getVideoTracks()[0])
-
-// setInterval(() => {
-//   capture
-//     .grabFrame()
-//     .catch((err) => console.log(err))
-//     .then((imageBitmap) => {
-//       // to base64
-//       console.log('now')
-//       if (!imageBitmap) {
-//         console.log('empty imageBitmap')
-//         return
-//       }
-//       const canvas = document.createElement('canvas')
-//       canvas.width = imageBitmap.width
-//       canvas.height = imageBitmap.height
-//       canvas.getContext('2d')?.drawImage(imageBitmap, 0, 0)
-//       const dataURL = canvas.toDataURL('image/jpeg')
-//       console.log('dataURL', dataURL)
-//     })
-// }, 5000)
+// const capture = new ImageCapture(steam.getVideoTracks()[0])
+export const streamToEnhancedImage = async (capture: ImageCapture) => {
+  const imageBitmap = await capture.grabFrame().catch((err) => console.log(err))
+  // to base64
+  console.log('now')
+  if (!imageBitmap) {
+    console.warn('empty imageBitmap')
+    return
+  }
+  const canvas = document.createElement('canvas')
+  canvas.width = imageBitmap.width
+  canvas.height = imageBitmap.height
+  canvas.getContext('2d')?.drawImage(imageBitmap, 0, 0)
+  const dataURL = canvas.toDataURL('image/jpeg')
+  console.log(dataURL.length)
+  const body = JSON.stringify({
+    base64Img: dataURL.replace('data:image/jpeg;base64,', ''),
+  })
+  console.log(body.length)
+  const res = await fetch('/api/imageEnhancement', {
+    method: 'POST',
+    body,
+  })
+  return (await res.json()) as { Image: string }
+}
