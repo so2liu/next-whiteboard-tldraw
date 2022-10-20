@@ -74,9 +74,13 @@ const VideoCall = (props: Props) => {
     localRef.current.srcObject = localStream
 
     if (withEnhancement) {
-      setInterval(async () => {
+      const id = setInterval(async () => {
         const capture = new ImageCapture(localStream.getVideoTracks()[0])
         const res = await streamToEnhancedImage(capture)
+        if (!res) {
+          clearInterval(id)
+          setBase64('')
+        }
         setBase64(res.Image)
         console.log(res.Image.length)
       }, 7000)
