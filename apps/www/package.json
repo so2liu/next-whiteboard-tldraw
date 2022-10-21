@@ -41,6 +41,7 @@
     "react-dom": "^18.2.0",
     "react-hotkeys-hook": "^3.4.6",
     "tailwindcss": "^3.1.8",
+    "tencentcloud-sdk-nodejs": "^4.0.461",
     "typescript": "^4.7.3"
   },
   "gitHead": "838fabdbff1a66d4d7ee8aa5c5d117bc55acbff2",

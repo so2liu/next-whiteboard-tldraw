@@ -6,7 +6,7 @@ import styles from './Auth.module.css'
 interface AuthProps {}
 
 const Auth: FC<AuthProps> = () => {
-  const u = useCurrentUserId()
+  const { u } = useCurrentUserId()
   useCheckInOut(u)
   const users = useLiveUsers()
   return <div className={styles.Auth}>Auth Component</div>
