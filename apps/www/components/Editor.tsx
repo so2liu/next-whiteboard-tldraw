@@ -2,6 +2,8 @@ import { Tldraw, TldrawApp, TldrawProps, useFileSystem } from '@tldraw/tldraw'
 import * as React from 'react'
 import { useUploadAssets } from '~hooks/useUploadAssets'
 import * as gtag from '~utils/gtag'
+import 'antd/dist/antd.css'
+
 
 declare const window: Window & { app: TldrawApp }
 

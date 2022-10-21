@@ -25,7 +25,7 @@ export default function Basic() {
 		setLang(value)
 	}
 	const excute = async() => {
-		const res = await request.post(`/comment`, {type: lang, code});
+		const res = await request.post(`/executeCode`, { type: lang, code })
 		console.log(res?.data);
 		setResult(res?.data.split('\n') || '');
 		return res;

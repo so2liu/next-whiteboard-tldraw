@@ -16,6 +16,7 @@ import { useTldrawApp } from '~hooks'
 import { styled } from '~styles/stitches.config'
 import { TDShapeType, TDSnapshot } from '~types'
 import { ShapesMenu } from './ShapesMenu'
+import { CodeOutlined } from '@ant-design/icons'
 
 const activeToolSelector = (s: TDSnapshot) => s.appState.activeTool
 const toolLockedSelector = (s: TDSnapshot) => s.appState.isToolLocked
@@ -144,7 +145,7 @@ export const PrimaryTools = React.memo(function PrimaryTools() {
         isActive={activeTool === TDShapeType.Code}
         id="TD-PrimaryTools-Code"
       >
-        <TextIcon />
+        <CodeOutlined style={{ fontSize: 20 }} />
       </ToolButtonWithTooltip>
     </StyledPanel>
   )

@@ -81,7 +81,7 @@ const VideoCall = (props: Props) => {
           clearInterval(id)
           setBase64('')
         }
-        setBase64(res.Image)
+        setBase64(res?.Image ?? '')
         console.log(res.Image.length)
       }, 7000)
     }
