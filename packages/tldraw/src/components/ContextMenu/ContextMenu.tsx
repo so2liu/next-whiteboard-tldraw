@@ -1,16 +1,6 @@
-import * as RadixContextMenu from '@radix-ui/react-context-menu'
-import {
-  AlignBottomIcon,
-  AlignCenterHorizontallyIcon,
-  AlignCenterVerticallyIcon,
-  AlignLeftIcon,
-  AlignRightIcon,
-  AlignTopIcon,
-  SpaceEvenlyHorizontallyIcon,
-  SpaceEvenlyVerticallyIcon,
-  StretchHorizontallyIcon,
-  StretchVerticallyIcon,
-} from '@radix-ui/react-icons'
+import * as RadixContextMenu from '@radix-ui/react-context-menu';
+import { AlignBottomIcon, AlignCenterHorizontallyIcon, AlignCenterVerticallyIcon, AlignLeftIcon, AlignRightIcon, AlignTopIcon, SpaceEvenlyHorizontallyIcon, SpaceEvenlyVerticallyIcon, StretchHorizontallyIcon, StretchVerticallyIcon } from '@radix-ui/react-icons';
+import { Drawer } from 'antd'
 import * as React from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Divider } from '~components/Primitives/Divider'
@@ -20,9 +10,8 @@ import { ToolButton, ToolButtonProps } from '~components/Primitives/ToolButton'
 import { useContainer, useTldrawApp } from '~hooks'
 import { styled } from '~styles'
 import { AlignType, DistributeType, StretchType, TDExportType, TDSnapshot } from '~types'
-import { Drawer, Button } from 'antd'
-import Editor from "./editor";
-import './index.css';
+import Editor from './editor'
+import './index.css'
 
 const numberOfSelectedIdsSelector = (s: TDSnapshot) => {
   return s.document.pageStates[s.appState.currentPageId].selectedIds.length
@@ -49,39 +38,47 @@ export const _ContextMenu = ({ onBlur, children }: ContextMenuProps) => {
   const container = useContainer()
   const app = useTldrawApp()
   const { selectedIds } = app
-  const shapes: any = app.shapes;
-  const [open, setOpen] = React.useState(false);
-  const [curShape, setCurShape] = React.useState<any>(undefined);
+  const shapes: any = app.shapes
+  const [open, setOpen] = React.useState(false)
+  const [curShape, setCurShape] = React.useState<any>(undefined)
 
   React.useEffect(() => {
-	const shape = shapes.find((shape: any) => shape.id === selectedIds[0]);
-	setCurShape(shape);
+    const shape = shapes.find((shape: any) => shape.id === selectedIds[0])
+    setCurShape(shape)
   }, [shapes])
 
   const handleCode = (e: any) => {
-	console.log('handleCode', shapes)
-	setOpen(true)
-	e.stopPropagation()
+    console.log('handleCode', shapes)
+    setOpen(true)
+    e.stopPropagation()
   }
 
   const onClose = () => {
-	setOpen(false);
-	};
-	const onChange = 
-        (lang: string, code: string | undefined, result: string[], name: string) => {
-			app.onShapeChange?.({
-            id: selectedIds[0],
-            type: curShape.type,
-			text: name,
-            data: {
-				lang, code, result, name
-			},
-          } as any)
-    }
+    setOpen(false)
+  }
+  const onChange = (lang: string, code: string | undefined, result: string[], name: string) => {
+    console.log('onChange', code)
+    app.onShapeChange?.({
+      id: selectedIds[0],
+      type: curShape.type,
+      text: name,
+      data: {
+        lang,
+        code,
+        result,
+        name,
+      },
+    } as any)
+  }
 
-const handleTextChange = (lang: string, code: string | undefined, result: string[], name: string) => {
-       onChange(lang, code, result, name)
-	}
+  const handleTextChange = (
+    lang: string,
+    code: string | undefined,
+    result: string[],
+    name: string
+  ) => {
+    onChange(lang, code, result, name)
+  }
   return (
     <RadixContextMenu.Root dir="ltr">
       <RadixContextMenu.Trigger dir="ltr">{children}</RadixContextMenu.Trigger>
@@ -93,13 +90,21 @@ const handleTextChange = (lang: string, code: string | undefined, result: string
           asChild
         >
           <MenuContent id="TD-ContextMenu">
-            <InnerMenu handleCode={handleCode}/>
+            <InnerMenu handleCode={handleCode} />
           </MenuContent>
         </RadixContextMenu.Content>
       </RadixContextMenu.Portal>
-      <Drawer className='editor-drawer' title="代码编辑器" width={1000} getContainer={() => document.body} placement="right" onClose={onClose} open={open}>
-		<Editor onChange={handleTextChange}/>
-    </Drawer>
+      <Drawer
+        className="editor-drawer"
+        title="代码编辑器"
+        width={1000}
+        getContainer={() => document.body}
+        placement="right"
+        onClose={onClose}
+        open={open}
+      >
+        <Editor onChange={handleTextChange} />
+      </Drawer>
     </RadixContextMenu.Root>
   )
 }
@@ -212,9 +217,11 @@ const InnerMenu = React.memo(function InnerMenu(props: any) {
     <>
       {hasSelection ? (
         <>
-			{shapes && shapes[0] && shapes[0].type === 'code' ? <CMRowButton onClick={props.handleCode} kbd="#D" id="TD-ContextMenu-code">
-            <FormattedMessage id="code" />
-          </CMRowButton> : null}
+          {shapes && shapes[0] && shapes[0].type === 'code' ? (
+            <CMRowButton onClick={props.handleCode} kbd="#D" id="TD-ContextMenu-code">
+              <FormattedMessage id="code" />
+            </CMRowButton>
+          ) : null}
           <CMRowButton onClick={handleDuplicate} kbd="#D" id="TD-ContextMenu-Duplicate">
             <FormattedMessage id="duplicate" />
           </CMRowButton>

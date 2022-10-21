@@ -4010,7 +4010,6 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     const shapeToUpdate = { ...(pageShapes[shape.id] as any), ...shape }
     const patch = Commands.updateShapes(this, [shapeToUpdate], this.currentPageId).after
     return this.patchState(patch, 'patched_shapes')
-    // this.updateShapes(shape)
   }
 
   onShapeBlur = () => {

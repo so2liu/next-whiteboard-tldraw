@@ -44,7 +44,7 @@ export default function DrawerEditor(props: Props) {
       setLang(curShape.data?.lang || 'javascript')
       setCode(curShape.data?.code || '')
       setResult(curShape.data?.result || [])
-      setName(curShape.data?.name || 'javascript')
+      setName(curShape.data?.name ?? 'javascript')
     }
   }, [curShape])
   React.useEffect(() => {
