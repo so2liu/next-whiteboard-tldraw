@@ -51,12 +51,19 @@ export const _ContextMenu = ({ onBlur, children }: ContextMenuProps) => {
   const { selectedIds } = app
   const shapes: any = app.shapes;
   const [open, setOpen] = React.useState(false);
+  const [curShape, setCurShape] = React.useState<any>(undefined);
+
+  React.useEffect(() => {
+	const shape = shapes.find((shape: any) => shape.id === selectedIds[0]);
+	setCurShape(shape);
+  }, [shapes])
 
   const handleCode = (e: any) => {
 	console.log('handleCode', shapes)
 	setOpen(true)
 	e.stopPropagation()
   }
+
   const onClose = () => {
 	setOpen(false);
 	};
@@ -64,10 +71,10 @@ export const _ContextMenu = ({ onBlur, children }: ContextMenuProps) => {
         (lang: string, code: string | undefined, result: string[], name: string) => {
 			app.onShapeChange?.({
             id: selectedIds[0],
-            type: shapes[0].type,
+            type: curShape.type,
 			text: name,
             data: {
-				lang, code, result
+				lang, code, result, name
 			},
           } as any)
     }
@@ -91,7 +98,7 @@ const handleTextChange = (lang: string, code: string | undefined, result: string
         </RadixContextMenu.Content>
       </RadixContextMenu.Portal>
       <Drawer className='editor-drawer' title="代码编辑器" width={1000} getContainer={() => document.body} placement="right" onClose={onClose} open={open}>
-		<Editor onChange={handleTextChange} data={(shapes as any) && (shapes[0] as any) && shapes[0].data}/>
+		<Editor onChange={handleTextChange}/>
     </Drawer>
     </RadixContextMenu.Root>
   )
@@ -205,8 +212,8 @@ const InnerMenu = React.memo(function InnerMenu(props: any) {
     <>
       {hasSelection ? (
         <>
-			{shapes && shapes[0] && shapes[0].type === 'code' ? <CMRowButton onClick={props.handleCode} kbd="#D" id="TD-ContextMenu-Duplicate">
-            <FormattedMessage id="duplicate" />
+			{shapes && shapes[0] && shapes[0].type === 'code' ? <CMRowButton onClick={props.handleCode} kbd="#D" id="TD-ContextMenu-code">
+            <FormattedMessage id="code" />
           </CMRowButton> : null}
           <CMRowButton onClick={handleDuplicate} kbd="#D" id="TD-ContextMenu-Duplicate">
             <FormattedMessage id="duplicate" />
