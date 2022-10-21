@@ -16,9 +16,10 @@ import {
   getTextSvgElement,
 } from '~state/shapes/shared'
 import { styled } from '~styles'
-import { Drawer } from 'antd'
+import { Drawer, Button } from 'antd'
 import { AlignStyle, CodeShape, TDMeta, TDShapeType, TransformInfo } from '~types'
 import Editor from "./editor";
+import './index.css';
 
 type T = CodeShape
 type E = HTMLDivElement
@@ -70,11 +71,27 @@ export class CodeUtil extends TDShapeUtil<T, E> {
 
       const [open, setOpen] = React.useState(false);
 
+	const [startTime, setStartTime] = React.useState(0);
+
       const handlePointerDown = React.useCallback((e: React.PointerEvent) => {
-		console.log('click');
+		console.log(isSelected)
 		setOpen(true)
         e.stopPropagation()
       }, [])
+
+	//   const handlePointerUp = React.useCallback((e: React.PointerEvent) => {
+	// 	console.log(e)
+	// 	console.log('click2', e.timeStamp);
+	// 	if(e.timeStamp - startTime > 2000) {
+	// 		console.log(e.timeStamp - startTime)
+	// 		console.log('drag')
+	// 		events.onPointerDown(e)
+	// 	} else {
+	// 		console.log('open')
+	// 		setOpen(true)
+	// 	}
+    //     e.stopPropagation()
+    //   }, [])
 
       const onChange = React.useCallback(
         (lang: string, code: string | undefined, result: string[]) => {
@@ -109,9 +126,13 @@ export class CodeUtil extends TDShapeUtil<T, E> {
 			setOpen(false);
 		};
 
+		const textClick = (e: any) => {
+			console.log('aaa');
+			e.stopPropagation()
+		}
       return (
 		<>
-        <HTMLContainer ref={ref} {...events} onPointerDown={handlePointerDown}>
+        <HTMLContainer ref={ref} {...events}>
           <StyledStickyContainer
             ref={rContainer}
             isDarkMode={meta.isDarkMode}
@@ -135,9 +156,10 @@ export class CodeUtil extends TDShapeUtil<T, E> {
             <StyledText ref={rText} isEditing={isEditing} alignment={shape.style.textAlign}>
               {shape.text}&#8203;
             </StyledText>
+			{/* <Button>编辑</Button>
 			<Drawer className='editor-drawer' title="代码编辑器" width={1000} placement="right" onClose={onClose} open={open}>
 				<Editor onChange={handleTextChange} data={shape.data}/>
-			</Drawer>
+			</Drawer> */}
           </StyledStickyContainer>
         </HTMLContainer>
 		</>
