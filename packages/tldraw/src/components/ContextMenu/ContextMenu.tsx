@@ -20,6 +20,9 @@ import { ToolButton, ToolButtonProps } from '~components/Primitives/ToolButton'
 import { useContainer, useTldrawApp } from '~hooks'
 import { styled } from '~styles'
 import { AlignType, DistributeType, StretchType, TDExportType, TDSnapshot } from '~types'
+import { Drawer, Button } from 'antd'
+import Editor from "./editor";
+import './index.css';
 
 const numberOfSelectedIdsSelector = (s: TDSnapshot) => {
   return s.document.pageStates[s.appState.currentPageId].selectedIds.length
@@ -44,7 +47,34 @@ interface ContextMenuProps {
 
 export const _ContextMenu = ({ onBlur, children }: ContextMenuProps) => {
   const container = useContainer()
+  const app = useTldrawApp()
+  const { selectedIds } = app
+  const shapes: any = app.shapes;
+  const [open, setOpen] = React.useState(false);
 
+  const handleCode = (e: any) => {
+	console.log('handleCode', shapes)
+	setOpen(true)
+	e.stopPropagation()
+  }
+  const onClose = () => {
+	setOpen(false);
+	};
+	const onChange = 
+        (lang: string, code: string | undefined, result: string[], name: string) => {
+			app.onShapeChange?.({
+            id: selectedIds[0],
+            type: shapes[0].type,
+			text: name,
+            data: {
+				lang, code, result
+			},
+          } as any)
+    }
+
+const handleTextChange = (lang: string, code: string | undefined, result: string[], name: string) => {
+       onChange(lang, code, result, name)
+	}
   return (
     <RadixContextMenu.Root dir="ltr">
       <RadixContextMenu.Trigger dir="ltr">{children}</RadixContextMenu.Trigger>
@@ -56,15 +86,18 @@ export const _ContextMenu = ({ onBlur, children }: ContextMenuProps) => {
           asChild
         >
           <MenuContent id="TD-ContextMenu">
-            <InnerMenu />
+            <InnerMenu handleCode={handleCode}/>
           </MenuContent>
         </RadixContextMenu.Content>
       </RadixContextMenu.Portal>
+      <Drawer className='editor-drawer' title="代码编辑器" width={1000} getContainer={() => document.body} placement="right" onClose={onClose} open={open}>
+		<Editor onChange={handleTextChange} data={(shapes as any) && (shapes[0] as any) && shapes[0].data}/>
+    </Drawer>
     </RadixContextMenu.Root>
   )
 }
 
-const InnerMenu = React.memo(function InnerMenu() {
+const InnerMenu = React.memo(function InnerMenu(props: any) {
   const app = useTldrawApp()
   const intl = useIntl()
   const numberOfSelectedIds = app.useStore(numberOfSelectedIdsSelector)
@@ -167,10 +200,14 @@ const InnerMenu = React.memo(function InnerMenu() {
   const hasTwoOrMore = numberOfSelectedIds > 1
   const hasThreeOrMore = numberOfSelectedIds > 2
 
+  const { shapes } = app
   return (
     <>
       {hasSelection ? (
         <>
+			{shapes && shapes[0] && shapes[0].type === 'code' ? <CMRowButton onClick={props.handleCode} kbd="#D" id="TD-ContextMenu-Duplicate">
+            <FormattedMessage id="duplicate" />
+          </CMRowButton> : null}
           <CMRowButton onClick={handleDuplicate} kbd="#D" id="TD-ContextMenu-Duplicate">
             <FormattedMessage id="duplicate" />
           </CMRowButton>
