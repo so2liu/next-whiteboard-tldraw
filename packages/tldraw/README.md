@@ -49,5 +49,3 @@ If you're using the library in a commercial product, please consider [becoming a
 ## Author
 
 - [@steveruizok](https://twitter.com/steveruizok)
-
-- ly
