@@ -13,7 +13,9 @@ const getImageEnhancement = async (req: NextApiRequest, res: NextApiResponse) =>
     return
   }
 
-  const { base64Img } = JSON.parse(req.body) as RequestBody
+  console.log('type', typeof req.body)
+  console.log(req.body.base64Img.length)
+  const { base64Img } = req.body as RequestBody
   console.log(typeof req.body)
   console.log(typeof base64Img)
 
@@ -43,19 +45,23 @@ const getImageEnhancement = async (req: NextApiRequest, res: NextApiResponse) =>
   const client = new OcrClient(clientConfig)
   let tcbRes: ImageEnhancementResponse
   try {
+    console.log('original length', base64Img.length)
     tcbRes = await client.ImageEnhancement({
       ImageBase64: base64Img,
       ReturnImage: 'preprocess',
       TaskType: 1,
     })
+    console.log('task 1')
     tcbRes = await client.ImageEnhancement({
       ImageBase64: tcbRes.Image,
       ReturnImage: 'preprocess',
       TaskType: 205,
     })
+    console.log('task 205')
 
     res.send({ status: 'success', ...tcbRes })
   } catch (error) {
+    console.log(error)
     res.status(500)
     res.send(tcbRes)
   }

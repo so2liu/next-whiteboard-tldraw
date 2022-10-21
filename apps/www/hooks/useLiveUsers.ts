@@ -22,8 +22,12 @@ const changeLiveStatus = (userId: string, status: boolean) => {
 
 export const useCurrentUserId = () => {
   const router = useRouter()
-  const { u, r } = router.query as { u: string | undefined; r: string | undefined }
-  return { u, r }
+  const { u, r, id } = router.query as {
+    u: string | undefined
+    r: string | undefined
+    id: string | undefined
+  }
+  return { u, r, roomId: id }
 }
 
 export const useCheckInOut = (userId: string) => {

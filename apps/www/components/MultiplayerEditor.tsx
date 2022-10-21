@@ -1,13 +1,13 @@
-import { TDUserStatus, Tldraw, TldrawProps, useFileSystem } from '@tldraw/tldraw';
-import 'antd/dist/antd.css';
-import * as React from 'react';
-import { useCallback } from 'react';
-import { useMultiplayerAssets } from '~hooks/useMultiplayerAssets';
-import { useMultiplayerState } from '~hooks/useMultiplayerState';
-import { useUploadAssets } from '~hooks/useUploadAssets';
-import { styled } from '~styles';
+import { TDUserStatus, Tldraw, TldrawProps, useFileSystem } from '@tldraw/tldraw'
+import 'antd/dist/antd.css'
+import * as React from 'react'
+import { useCallback } from 'react'
+import { useMultiplayerAssets } from '~hooks/useMultiplayerAssets'
+import { useMultiplayerState } from '~hooks/useMultiplayerState'
+import { useUploadAssets } from '~hooks/useUploadAssets'
+import { styled } from '~styles'
 import { RoomProvider } from '~utils/liveblocks'
-
+import VideoCall from './VideoCall/VideoCall'
 
 interface Props {
   roomId: string
@@ -30,6 +30,7 @@ const MultiplayerEditor = ({ roomId }: Props) => {
       }}
     >
       <Editor roomId={roomId} />
+      <VideoCall />
     </RoomProvider>
   )
 }

@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router'
 import Peer, { DataConnection, MediaConnection } from 'peerjs'
 import { useCallback, useEffect } from 'react'
 import { useState } from 'react'
