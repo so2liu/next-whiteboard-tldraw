@@ -7,28 +7,27 @@ export function useMultiplayerAssets() {
     // Send the asset to our upload endpoint, which in turn will send it to AWS and
     // respond with the URL of the uploaded file.
     async (app: TldrawApp, file: File, id: string): Promise<string | false> => {
-      const filename = encodeURIComponent((id ?? Utils.uniqueId()) + file.name)
-
-      const fileType = encodeURIComponent(file.type)
-
-      const res = await fetch(`/api/upload?file=${filename}&fileType=${fileType}`)
-
-      const { url, fields } = await res.json()
-
       const formData = new FormData()
 
-      Object.entries({ ...fields, file }).forEach(([key, value]) => {
-        formData.append(key, value as any)
-      })
+      formData.append('myFile', file)
+      debugger
 
-      const upload = await fetch(url, {
+      const uploadRes = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
       })
+      const upload = (await uploadRes.json()) as {
+        fileid: string
+        code: 'SUCCESS'
+        download_url: string
+        mime_type: 'image/png'
+        fileID: string
+        tempFileURL: string
+      }
 
-      if (!upload.ok) return false
+      console.log(upload)
 
-      return url + '/' + filename
+      return upload.download_url
     },
     []
   )
