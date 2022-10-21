@@ -1,7 +1,8 @@
 import Editor from '@monaco-editor/react'
 import { Button, Input, Select } from 'antd'
 import React, { useState } from 'react'
-import './index.css'
+import { useContainer, useTldrawApp } from '~hooks'
+import request from '~service/request'
 
 const options = [
   {
@@ -15,18 +16,36 @@ const options = [
 ]
 
 interface Props {
-  data: {
+  data?: {
     code: string | undefined
     lang: string
     result: string[]
+    name: string
   }
   onChange: (lang: string, code: string | undefined, result: string[], name: string) => void
 }
 export default function DrawerEditor(props: Props) {
+  const app = useTldrawApp()
+  const { selectedIds } = app
+  const shapes: any = app.shapes
+  const [curShape, setCurShape] = React.useState<any>(undefined)
   const [lang, setLang] = useState('javascript')
   const [code, setCode] = useState<string | undefined>('')
-  const [result, setResult] = useState(props.data?.result || [])
-  const [name, setName] = useState<string>('')
+  const [result, setResult] = useState([])
+  const [name, setName] = useState<string>('javascript')
+  React.useEffect(() => {
+    const shape = shapes.find((shape: any) => shape.id === selectedIds[0])
+    setCurShape(shape)
+  }, [shapes])
+
+  React.useEffect(() => {
+    if (curShape) {
+      setLang(curShape.data?.lang || 'javascript')
+      setCode(curShape.data?.code || '')
+      setResult(curShape.data?.result || [])
+      setName(curShape.data?.name || 'javascript')
+    }
+  }, [curShape])
   React.useEffect(() => {
     props.onChange(lang, code, result, name)
   }, [lang, code, result, name])
@@ -34,16 +53,8 @@ export default function DrawerEditor(props: Props) {
     setLang(value)
   }
   const excute = async () => {
-    const res = await fetch('/api/executeCode', {
-      method: 'POST',
-      body: JSON.stringify({
-        type: lang,
-        code,
-      }),
-    })
-    const payload = await res.json()
-    console.log(payload)
-    setResult(payload.data?.split('\n') || '')
+    const res: any = await request.post(`/comment`, { type: lang, code })
+    setResult(res?.split('\n') || '')
     return res
   }
   const codeChange = (value: string | undefined) => {
@@ -60,11 +71,13 @@ export default function DrawerEditor(props: Props) {
         <Input
           onChange={changName}
           value={name}
+          defaultValue="javascript"
           style={{ width: '200px', marginBottom: '16px', marginRight: '16px' }}
         />
         <Select
           options={options}
           defaultValue="javascript"
+          value={lang}
           onChange={onChange}
           style={{ width: '200px' }}
         />
@@ -76,6 +89,7 @@ export default function DrawerEditor(props: Props) {
             height="90vh"
             defaultLanguage={props.data?.lang || 'javascript'}
             defaultValue={props.data?.code}
+            value={code}
             language={lang}
             onChange={codeChange}
           />
