@@ -1,8 +1,9 @@
-import Editor from '@monaco-editor/react'
-import { Button, Input, Select } from 'antd'
-import React, { useState } from 'react'
-import { useContainer, useTldrawApp } from '~hooks'
-import request from '~service/request'
+import Editor from '@monaco-editor/react';
+import { Button, Input, Select } from 'antd';
+import React, { useState } from 'react';
+import { useContainer, useTldrawApp } from '~hooks';
+import request from '~service/request';
+
 
 const options = [
   {
@@ -53,8 +54,19 @@ export default function DrawerEditor(props: Props) {
     setLang(value)
   }
   const excute = async () => {
-    const res: any = await request.post(`/comment`, { type: lang, code })
-    setResult(res?.split('\n') || '')
+    const res = await fetch('/api/executeCode', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        code,
+        type: lang,
+      }),
+    })
+    const payload = await res.json()
+    console.log(payload)
+    setResult(payload?.data?.split('\n') || '')
     return res
   }
   const codeChange = (value: string | undefined) => {

@@ -1,6 +1,7 @@
-import { spawn } from 'child_process'
-import * as fs from 'fs'
-import { NextApiRequest, NextApiResponse } from 'next'
+import { spawn } from 'child_process';
+import * as fs from 'fs';
+import { NextApiRequest, NextApiResponse } from 'next';
+
 
 type Code = {
   code: string
@@ -8,7 +9,7 @@ type Code = {
 }
 
 export default async function excute(req: NextApiRequest, res: NextApiResponse) {
-  const data = JSON.parse(req.body) as Code
+  const data = req.body as Code
   const payload = await new Promise((resolve, reject) => {
     const { code, type } = data
     let op = ''
