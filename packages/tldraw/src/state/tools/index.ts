@@ -9,6 +9,7 @@ import { SelectTool } from './SelectTool'
 import { StickyTool } from './StickyTool'
 import { TextTool } from './TextTool'
 import { TriangleTool } from './TriangleTool'
+import { CodeTool } from './CodeTool'
 
 export interface ToolsMap {
   select: typeof SelectTool
@@ -21,6 +22,7 @@ export interface ToolsMap {
   [TDShapeType.Line]: typeof LineTool
   [TDShapeType.Arrow]: typeof ArrowTool
   [TDShapeType.Sticky]: typeof StickyTool
+  [TDShapeType.Code]: typeof CodeTool,
 }
 
 export type ToolOfType<K extends TDToolType> = ToolsMap[K]
@@ -38,4 +40,5 @@ export const tools: { [K in TDToolType]: ToolsMap[K] } = {
   [TDShapeType.Line]: LineTool,
   [TDShapeType.Arrow]: ArrowTool,
   [TDShapeType.Sticky]: StickyTool,
+  [TDShapeType.Code]: CodeTool,
 }

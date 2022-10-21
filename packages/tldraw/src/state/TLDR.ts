@@ -44,6 +44,7 @@ export class TLDR {
   }
 
   static getPage(data: TDSnapshot, pageId: string): TDPage {
+	console.log('data', data)
     return data.document.pages[pageId]
   }
 
