@@ -8,27 +8,28 @@ export function useUploadAssets() {
     // respond with the URL of the uploaded file.
 
     async (app: TldrawApp, file: File, id: string): Promise<string | false> => {
+      const filename = encodeURIComponent((id ?? Utils.uniqueId()) + file.name)
+
+      const fileType = encodeURIComponent(file.type)
+
+      const res = await fetch(`/api/upload?file=${filename}&fileType=${fileType}`)
+
+      const { url, fields } = await res.json()
+
       const formData = new FormData()
 
-      formData.append('myFile', file)
-      debugger
+      Object.entries({ ...fields, file }).forEach(([key, value]) => {
+        formData.append(key, value as any)
+      })
 
-      const uploadRes = await fetch('/api/upload', {
+      const upload = await fetch(url, {
         method: 'POST',
         body: formData,
       })
-      const upload = (await uploadRes.json()) as {
-        fileid: string
-        code: 'SUCCESS'
-        download_url: string
-        mime_type: 'image/png'
-        fileID: string
-        tempFileURL: string
-      }
 
-      console.log(upload)
+      if (!upload.ok) return false
 
-      return upload.download_url
+      return url + '/' + filename
     },
     []
   )
