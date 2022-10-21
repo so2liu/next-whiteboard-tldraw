@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@cloudbase/js-sdk": "^1.7.2",
+    "@cloudbase/node-sdk": "^2.9.1",
     "@liveblocks/client": "^0.18.3",
     "@liveblocks/react": "^0.18.3",
     "@stitches/react": "^1.2.8",
@@ -29,6 +30,7 @@
     "aws-sdk": "^2.1053.0",
     "eslint": "^8.8.0",
     "eslint-config-next": "^12.0.10",
+    "formidable": "v3",
     "lz-string": "^1.4.4",
     "nanoid": "^3.3.4",
     "next": "^12.1.6",
@@ -46,6 +48,7 @@
   },
   "gitHead": "838fabdbff1a66d4d7ee8aa5c5d117bc55acbff2",
   "devDependencies": {
+    "@types/formidable": "^2.0.5",
     "@types/w3c-image-capture": "^1.0.7",
     "next-transpile-modules": "^9.0.0"
   }
