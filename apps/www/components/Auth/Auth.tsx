@@ -1,5 +1,4 @@
-import { useRouter } from 'next/router'
-import React, { FC, useEffect } from 'react'
+import React, { FC } from 'react'
 import { useCheckInOut, useCurrentUserId, useLiveUsers } from '~hooks/useLiveUsers'
 import styles from './Auth.module.css'
 

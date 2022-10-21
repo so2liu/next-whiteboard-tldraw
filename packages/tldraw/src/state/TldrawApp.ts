@@ -75,6 +75,7 @@ import { SessionArgsOfType, TldrawSession, getSession } from './sessions'
 import { clearPrevSize } from './shapes/shared/getTextSize'
 import { ArrowTool } from './tools/ArrowTool'
 import type { BaseTool } from './tools/BaseTool'
+import { CodeTool } from './tools/CodeTool'
 import { DrawTool } from './tools/DrawTool'
 import { EllipseTool } from './tools/EllipseTool'
 import { EraseTool } from './tools/EraseTool'
@@ -84,10 +85,19 @@ import { SelectTool } from './tools/SelectTool'
 import { StickyTool } from './tools/StickyTool'
 import { TextTool } from './tools/TextTool'
 import { TriangleTool } from './tools/TriangleTool'
-import { CodeTool } from './tools/CodeTool'
 
-const uuid = Utils.uniqueId()
+function parseQueryObjectFromUrl() {
+  const query = window.location.search.substring(1)
+  const vars = query.split('&')
+  const queryObject: Record<string, string> = {}
+  for (let i = 0; i < vars.length; i++) {
+    const pair = vars[i].split('=')
+    queryObject[pair[0]] = decodeURIComponent(pair[1])
+  }
+  return queryObject
+}
 
+const uuid = `${parseQueryObjectFromUrl().u}_${Utils.uniqueId()}`
 export interface TDCallbacks {
   /**
    * (optional) A callback to run when the component mounts.
@@ -209,7 +219,7 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     [TDShapeType.Line]: new LineTool(this),
     [TDShapeType.Arrow]: new ArrowTool(this),
     [TDShapeType.Sticky]: new StickyTool(this),
-	[TDShapeType.Code]: new CodeTool(this),
+    [TDShapeType.Code]: new CodeTool(this),
   }
 
   currentTool: BaseTool = this.tools.select
