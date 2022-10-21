@@ -16,7 +16,9 @@ import {
   getTextSvgElement,
 } from '~state/shapes/shared'
 import { styled } from '~styles'
+import { Drawer } from 'antd'
 import { AlignStyle, CodeShape, TDMeta, TDShapeType, TransformInfo } from '~types'
+import Editor from "./editor";
 
 type T = CodeShape
 type E = HTMLDivElement
@@ -43,8 +45,13 @@ export class CodeUtil extends TDShapeUtil<T, E> {
         parentId: 'page',
         childIndex: 1,
         point: [0, 0],
-        size: [200, 200],
-        text: '',
+        size: [200, 100],
+		text: 'javascript',
+        data: {
+			lang: 'javascript',
+			code: '',
+			result: []
+		},
         rotation: 0,
         style: defaultTextStyle,
       },
@@ -53,140 +60,35 @@ export class CodeUtil extends TDShapeUtil<T, E> {
   }
 
   Component = TDShapeUtil.Component<T, E, TDMeta>(
-    ({ shape, meta, events, isGhost, isBinding, isEditing, onShapeBlur, onShapeChange }, ref) => {
-      const font = getStickyFontStyle(shape.style)
-
+    ({ shape, meta, events, isGhost, isBinding, isEditing, isSelected, onShapeChange }, ref) => {
+		const font = getStickyFontStyle(shape.style)
       const { color, fill } = getStickyShapeStyle(shape.style, meta.isDarkMode)
 
       const rContainer = React.useRef<HTMLDivElement>(null)
 
-      const rTextArea = React.useRef<HTMLTextAreaElement>(null)
-
       const rText = React.useRef<HTMLDivElement>(null)
 
-      const rIsMounted = React.useRef(false)
+      const [open, setOpen] = React.useState(false);
 
       const handlePointerDown = React.useCallback((e: React.PointerEvent) => {
-		console.log('click')
+		console.log('click');
+		setOpen(true)
         e.stopPropagation()
       }, [])
 
       const onChange = React.useCallback(
-        (text: string) => {
+        (lang: string, code: string | undefined, result: string[]) => {
           onShapeChange?.({
             id: shape.id,
             type: shape.type,
-            text: TLDR.normalizeText(text),
+			text: lang,
+            data: {
+				lang, code, result
+			},
           })
         },
         [shape.id]
       )
-
-      const handleTextChange = React.useCallback(
-        (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-          onChange(e.currentTarget.value)
-        },
-        [onShapeChange, onChange]
-      )
-
-      const handleKeyDown = React.useCallback(
-        (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-          if (e.key === 'Escape') {
-            e.preventDefault()
-            e.stopPropagation()
-            onShapeBlur?.()
-            return
-          }
-
-          if (e.key === 'Tab' && shape.text.length === 0) {
-            e.preventDefault()
-            return
-          }
-
-          if (!(e.key === 'Meta' || e.metaKey)) {
-            e.stopPropagation()
-          } else if (e.key === 'z' && e.metaKey) {
-            if (e.shiftKey) {
-              document.execCommand('redo', false)
-            } else {
-              document.execCommand('undo', false)
-            }
-            e.stopPropagation()
-            e.preventDefault()
-            return
-          }
-          if ((e.metaKey || e.ctrlKey) && e.key === '=') {
-            e.preventDefault()
-          }
-          if (e.key === 'Tab') {
-            e.preventDefault()
-            if (e.shiftKey) {
-              TextAreaUtils.unindent(e.currentTarget)
-            } else {
-              TextAreaUtils.indent(e.currentTarget)
-            }
-
-            onShapeChange?.({ ...shape, text: TLDR.normalizeText(e.currentTarget.value) })
-          }
-        },
-        [shape, onShapeChange]
-      )
-
-      const handleBlur = React.useCallback((e: React.FocusEvent<HTMLTextAreaElement>) => {
-		console.log('blur')
-        e.currentTarget.setSelectionRange(0, 0)
-        onShapeBlur?.()
-      }, [])
-
-      const handleFocus = React.useCallback(
-        (e: React.FocusEvent<HTMLTextAreaElement>) => {
-          if (!isEditing) return
-          if (!rIsMounted.current) return
-          console.log('focus')
-          e.currentTarget.select()
-        },
-        [isEditing]
-      )
-
-      // Focus when editing changes to true
-      React.useEffect(() => {
-        if (isEditing) {
-          rIsMounted.current = true
-          const elm = rTextArea.current!
-          elm.focus()
-          elm.select()
-        }
-      }, [isEditing])
-
-      // Resize to fit text
-    //   React.useEffect(() => {
-    //     const text = rText.current!
-
-    //     const { size } = shape
-    //     const { offsetHeight: currTextHeight } = text
-    //     const minTextHeight = MIN_CONTAINER_HEIGHT - PADDING * 2
-    //     const prevTextHeight = size[1] - PADDING * 2
-
-    //     // Same size? We can quit here
-    //     if (currTextHeight === prevTextHeight) return
-
-    //     if (currTextHeight > minTextHeight) {
-    //       // Snap the size to the text content if the text only when the
-    //       // text is larger than the minimum text height.
-    //       onShapeChange?.({ id: shape.id, size: [size[0], currTextHeight + PADDING * 2] })
-    //       return
-    //     }
-
-    //     if (currTextHeight < minTextHeight && size[1] > MIN_CONTAINER_HEIGHT) {
-    //       // If we're smaller than the minimum height and the container
-    //       // is too tall, snap it down to the minimum container height
-    //       onShapeChange?.({ id: shape.id, size: [size[0], MIN_CONTAINER_HEIGHT] })
-    //       return
-    //     }
-
-    //     const textarea = rTextArea.current
-    //     textarea?.focus()
-    //   }, [shape.text, shape.size[1], shape.style])
 
       const style = {
         font,
@@ -196,14 +98,25 @@ export class CodeUtil extends TDShapeUtil<T, E> {
           : `0.5px 0.5px 2px rgba(255, 255, 255,.5)`,
       }
 
+      const handleTextChange = React.useCallback(
+        (lang: string, code: string | undefined, result: string[]) => {
+          onChange(lang, code, result)
+        },
+        [onShapeChange, onChange]
+      )
+
+		const onClose = () => {
+			setOpen(false);
+		};
+
       return (
-        <HTMLContainer ref={ref} {...events}>
+		<>
+        <HTMLContainer ref={ref} {...events} onPointerDown={handlePointerDown}>
           <StyledStickyContainer
             ref={rContainer}
             isDarkMode={meta.isDarkMode}
             isGhost={isGhost}
-            style={{ backgroundColor: fill, ...style }}
-			onClick={() => console.log('jjjjjjjj')}
+            style={{ backgroundColor: 'rgba(241,148,138,0.5)', ...style }}
           >
 			<div style={{width: '200px', backgroundColor: '#000'}}></div>
             {isBinding && (
@@ -222,31 +135,12 @@ export class CodeUtil extends TDShapeUtil<T, E> {
             <StyledText ref={rText} isEditing={isEditing} alignment={shape.style.textAlign}>
               {shape.text}&#8203;
             </StyledText>
-            {isEditing && (
-              <StyledTextArea
-                ref={rTextArea}
-                onPointerDown={handlePointerDown}
-                value={shape.text}
-                onChange={handleTextChange}
-                onKeyDown={handleKeyDown}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-                tabIndex={-1}
-                autoComplete="false"
-                autoCapitalize="false"
-                autoCorrect="false"
-                autoSave="false"
-                autoFocus
-                spellCheck={true}
-                alignment={shape.style.textAlign}
-                onContextMenu={stopPropagation}
-                onCopy={stopPropagation}
-                onPaste={stopPropagation}
-                onCut={stopPropagation}
-              />
-            )}
+			<Drawer className='editor-drawer' title="代码编辑器" width={1000} placement="right" onClose={onClose} open={open}>
+				<Editor onChange={handleTextChange} data={shape.data}/>
+			</Drawer>
           </StyledStickyContainer>
         </HTMLContainer>
+		</>
       )
     }
   )

@@ -4010,7 +4010,6 @@ export class TldrawApp extends StateManager<TDSnapshot> {
     const { editingId } = this.pageState
     const { isToolLocked } = this.getAppState()
 
-	console.log('editingId', editingId)
     if (editingId) {
       // If we're editing text, then delete the text if it's empty
       const shape = this.getShape(editingId)

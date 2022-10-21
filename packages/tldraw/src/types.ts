@@ -407,6 +407,9 @@ export interface CodeShape extends TDBaseShape {
 	type: TDShapeType.Code
 	size: number[]
 	text: string
+	data: {
+		lang: string, code: string | undefined, result: string[]
+	}
 }
 
 // A union of all shapes
