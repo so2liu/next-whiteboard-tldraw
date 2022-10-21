@@ -10,7 +10,6 @@ export interface VideoCallProps {}
 const VideoCall: FC<VideoCallProps> = () => {
   // const ref = useRef<HTMLDivElement>(null)
   const [targetUserId, setTargetUserId] = useState<string>('liuyang02')
-  const liveUsers = useLiveUsers()
   const { u: currentUserId } = useCurrentUserId()
   // const { peer, call } = usePeerJS(currentUserId)
   // const callRef = useRef<MediaConnection>()
@@ -24,8 +23,8 @@ const VideoCall: FC<VideoCallProps> = () => {
       <label htmlFor="target">
         连线用户：
         <select value={targetUserId} onChange={(e) => setTargetUserId(e.target.value)}>
-          {liveUsers.map((u) => (
-            <option key={u._id}>{u._id}</option>
+          {['liuyang02', 'fangleting', 'wangxinyu'].map((u) => (
+            <option key={u}>{u}</option>
           ))}
         </select>
       </label>

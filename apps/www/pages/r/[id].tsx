@@ -1,7 +1,8 @@
-import type { GetServerSideProps } from 'next'
-import dynamic from 'next/dynamic'
-import Head from 'next/head'
-import * as React from 'react'
+import type { GetServerSideProps } from 'next';
+import dynamic from 'next/dynamic';
+import Head from 'next/head';
+import * as React from 'react';
+
 
 const IFrameWarning = dynamic(() => import('~components/IFrameWarning'), {
   ssr: false,
@@ -11,6 +12,7 @@ const MultiplayerEditor = dynamic(() => import('~components/MultiplayerEditor'),
   ssr: false,
 }) as any
 
+const VideoCall = dynamic(() => import('~components/VideoCall/VideoCall'), { ssr: false })
 interface RoomProps {
   id: string
 }
@@ -26,6 +28,7 @@ export default function Room({ id }: RoomProps) {
         <title>tldraw - {id}</title>
       </Head>
       <MultiplayerEditor roomId={id} />
+      <VideoCall />
     </>
   )
 }
