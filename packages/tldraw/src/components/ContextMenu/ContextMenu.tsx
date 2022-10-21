@@ -13,6 +13,7 @@ import { AlignType, DistributeType, StretchType, TDExportType, TDSnapshot } from
 import Editor from './editor'
 import './index.css'
 
+
 const numberOfSelectedIdsSelector = (s: TDSnapshot) => {
   return s.document.pageStates[s.appState.currentPageId].selectedIds.length
 }
@@ -212,16 +213,21 @@ const InnerMenu = React.memo(function InnerMenu(props: any) {
   const hasTwoOrMore = numberOfSelectedIds > 1
   const hasThreeOrMore = numberOfSelectedIds > 2
 
-  const { shapes } = app
+  const { shapes, selectedIds } = app
+  const [curShape, setCurShape] = React.useState<any>(undefined)
+
+  React.useEffect(() => {
+    const shape = shapes.find((shape: any) => shape.id === selectedIds[0])
+    setCurShape(shape)
+  }, [shapes])
   return (
     <>
       {hasSelection ? (
         <>
-          {shapes && shapes[0] && shapes[0].type === 'code' ? (
-            <CMRowButton onClick={props.handleCode} kbd="#D" id="TD-ContextMenu-code">
+          {curShape && curShape.type === 'code' ? <CMRowButton onClick={props.handleCode} kbd="#D" id="TD-ContextMenu-code">
               <FormattedMessage id="code" />
             </CMRowButton>
-          ) : null}
+           : null}
           <CMRowButton onClick={handleDuplicate} kbd="#D" id="TD-ContextMenu-Duplicate">
             <FormattedMessage id="duplicate" />
           </CMRowButton>
