@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import TRTC, { RemoteStream } from 'trtc-js-sdk'
 import useAsyncEffect from 'use-async-effect'
 import { useCurrentUserId } from '~hooks/useLiveUsers'
+import MyVideo from './MyVideo'
 import { genTestUserSig } from './gerateSig'
 
 const VideoCallV3CallerTencent = () => {
@@ -54,6 +55,7 @@ const VideoCallV3CallerTencent = () => {
   return (
     <div>
       <h1>你的伙伴们</h1>
+      <MyVideo />
       {streams.map((stream) => (
         <div className="w-60" key={stream.getId()} id={stream.getId()}>
           {stream.getUserId()}
