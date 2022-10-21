@@ -225,6 +225,7 @@ export type TDToolType =
   | TDShapeType.Line
   | TDShapeType.Arrow
   | TDShapeType.Sticky
+  | TDShapeType.Code
 
 export type Easing =
   | 'linear'
@@ -294,6 +295,7 @@ export enum TDShapeType {
   Group = 'group',
   Image = 'image',
   Video = 'video',
+  Code = 'code'
 }
 
 export enum Decoration {
@@ -400,6 +402,13 @@ export interface GroupShape extends TDBaseShape {
   children: string[]
 }
 
+
+export interface CodeShape extends TDBaseShape {
+	type: TDShapeType.Code
+	size: number[]
+	text: string
+}
+
 // A union of all shapes
 export type TDShape =
   | RectangleShape
@@ -412,6 +421,7 @@ export type TDShape =
   | StickyShape
   | ImageShape
   | VideoShape
+  | CodeShape
 
 /* ------------------ Shape Styles ------------------ */
 

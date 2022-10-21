@@ -19,6 +19,7 @@ import ReadOnly from './readonly'
 import Scroll from './scroll'
 import './styles.css'
 import UIOptions from './ui-options'
+import 'antd/dist/antd.css'; 
 
 const pages: ({ path: string; component: any; title: string } | '---')[] = [
   { path: '/develop', component: Develop, title: 'Develop' },

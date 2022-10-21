@@ -58,6 +58,10 @@ export const PrimaryTools = React.memo(function PrimaryTools() {
     app.openAsset()
   }, [app])
 
+  const selectCodeTool = React.useCallback(async () => {
+    app.selectTool(TDShapeType.Code)
+  }, [app])
+
   const panelStyle = dockPosition === 'bottom' || dockPosition === 'top' ? 'row' : 'column'
 
   return (
@@ -130,6 +134,17 @@ export const PrimaryTools = React.memo(function PrimaryTools() {
         id="TD-PrimaryTools-Image"
       >
         <ImageIcon />
+      </ToolButtonWithTooltip>
+
+      <ToolButtonWithTooltip
+        kbd={'11'}
+        label={intl.formatMessage({ id: 'text' })}
+        onClick={selectCodeTool}
+        isLocked={isToolLocked}
+        isActive={activeTool === TDShapeType.Code}
+        id="TD-PrimaryTools-Code"
+      >
+        <TextIcon />
       </ToolButtonWithTooltip>
     </StyledPanel>
   )
