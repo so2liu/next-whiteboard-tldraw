@@ -1,9 +1,8 @@
-import Editor from '@monaco-editor/react';
-import { Button, Input, Select } from 'antd';
-import React, { useState } from 'react';
-import { useContainer, useTldrawApp } from '~hooks';
-import request from '~service/request';
-
+import Editor from '@monaco-editor/react'
+import { Button, Input, Select } from 'antd'
+import React, { useState } from 'react'
+import { useContainer, useTldrawApp } from '~hooks'
+import request from '~service/request'
 
 const options = [
   {
@@ -53,20 +52,25 @@ export default function DrawerEditor(props: Props) {
   const onChange = (value: string) => {
     setLang(value)
   }
+  const [loading, setLoading] = useState(false)
   const excute = async () => {
-    const res = await fetch('/api/executeCode', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        code,
-        type: lang,
-      }),
-    })
+    setLoading(true)
+    const res = await fetch(
+      'https://cloudbase-prepaid-4eiods2e0a26e3-1300840533.ap-shanghai.app.tcloudbase.com/run-js-py',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          code,
+          lang,
+        }),
+      }
+    )
     const payload = await res.json()
-    console.log(payload)
-    setResult(payload?.data?.split('\n') || '')
+    setResult(payload?.result?.split('\n') || '')
+    setLoading(false)
     return res
   }
   const codeChange = (value: string | undefined) => {
@@ -93,7 +97,9 @@ export default function DrawerEditor(props: Props) {
           onChange={onChange}
           style={{ width: '200px' }}
         />
-        <Button onClick={excute}>运行</Button>
+        <Button loading={loading} onClick={excute}>
+          运行
+        </Button>
       </div>
       <div className="code-wrap">
         <div className="left-editor">

@@ -61,8 +61,7 @@ function Editor({ roomId }: Props) {
             <path d="m13 10.814v11.188l2.969-2.866.428-.139h4.768z" />
           </g>
         </svg>
-
-        <div style={{ color: props.color }}>{userId}</div>
+        <div style={{ color: props.color, fontSize: 24 }}>{userId}</div>
       </div>
     )
   }, [])
