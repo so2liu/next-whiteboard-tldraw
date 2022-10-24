@@ -23,7 +23,7 @@ export default function Room({ id }: RoomProps) {
   return (
     <>
       <Head>
-        <title>tldraw - {id}</title>
+        <title>CoBoard | 巴别塔 - {id}</title>
       </Head>
       <MultiplayerEditor roomId={id} />
     </>

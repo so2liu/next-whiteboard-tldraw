@@ -130,7 +130,7 @@ export const MultiplayerMenu = function MultiplayerMenu() {
           id="TD-Multiplayer-CreateMultiplayerProject"
           onClick={handleCreateMultiplayerProject}
         >
-          <a href="https://tldraw.com/r">
+          <a href="https://next.yangl.com.cn/r">
             <FormattedMessage id="create.multiplayer.project" />
           </a>
         </DMItem>

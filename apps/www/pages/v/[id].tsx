@@ -24,7 +24,7 @@ export default function Room({ id }: RoomProps) {
   return (
     <>
       <Head>
-        <title>tldraw - {id} (read only)</title>
+        <title>巴别塔 | {id} (read only)</title>
       </Head>
       <ReadOnlyMultiplayerEditor roomId={id} />
     </>
