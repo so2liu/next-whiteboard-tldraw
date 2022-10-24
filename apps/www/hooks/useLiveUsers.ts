@@ -10,7 +10,7 @@ export const auth = app.auth({
   persistence: 'local',
 })
 
-const db = app.database()
+export const db = app.database()
 
 const changeLiveStatus = (userId: string, status: boolean) => {
   if (!userId) return

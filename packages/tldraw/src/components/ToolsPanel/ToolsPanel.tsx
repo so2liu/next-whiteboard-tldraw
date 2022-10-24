@@ -6,7 +6,6 @@ import type { TDSnapshot } from '~types'
 import { ActionButton } from './ActionButton'
 import { BackToContent } from './BackToContent'
 import { DeleteButton } from './DeleteButton'
-import { HelpPanel } from './HelpPanel'
 import { PrimaryTools } from './PrimaryTools'
 import { StatusBar } from './StatusBar'
 
