@@ -7,6 +7,7 @@ import { useMultiplayerState } from '~hooks/useMultiplayerState'
 import { useUploadAssets } from '~hooks/useUploadAssets'
 import { styled } from '~styles'
 import { RoomProvider } from '~utils/liveblocks'
+import Auth from './Auth/Auth'
 import VideoCall from './VideoCall/VideoCall'
 
 interface Props {
@@ -83,6 +84,7 @@ function Editor({ roomId }: Props) {
         {...fileSystemEvents}
         {...events}
       />
+      <Auth />
     </div>
   )
 }

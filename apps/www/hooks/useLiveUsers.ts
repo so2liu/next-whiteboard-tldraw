@@ -2,11 +2,11 @@ import cloudbase from '@cloudbase/js-sdk'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
 
-const app = cloudbase.init({
+export const app = cloudbase.init({
   env: 'cloudbase-prepaid-4eiods2e0a26e3',
 })
 
-app.auth({
+export const auth = app.auth({
   persistence: 'local',
 })
 
