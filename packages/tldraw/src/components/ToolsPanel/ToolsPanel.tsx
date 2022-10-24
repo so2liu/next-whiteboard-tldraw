@@ -36,7 +36,7 @@ export const ToolsPanel = React.memo(function ToolsPanel({ onBlur }: ToolsPanelP
           </StyledPrimaryTools>
         </StyledCenterWrap>
       </StyledToolsPanelContainer>
-      <HelpPanel />
+      {/* <HelpPanel /> */}
       {isDebugMode && (
         <StyledStatusWrap>
           <StatusBar />

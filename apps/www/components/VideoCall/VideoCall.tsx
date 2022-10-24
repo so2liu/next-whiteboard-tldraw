@@ -8,7 +8,7 @@ const VideoCall: FC<VideoCallProps> = () => {
   return (
     <div
       id="video-call"
-      className={`absolute p-4 space-y-2 top-14 right-0 bg-slate-300 flex flex-col`}
+      className={`absolute p-4 space-y-2 bottom-14 right-0 bg-slate-300 flex flex-col`}
     >
       <VideoCallV3CallerTencent />
       <ImageEnhance />
